@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <style>
+
+        table {
+            background: #FFF8DC;
+        }
+
+        th {
+            background: #FFF5EE;
+        }
+    </style>
+    <title> id пользователя </title>
+</head>
+<body style="background:#F5F5DC">
+<br>
+<br>
+<h1 style="text-align: center; vertical-align: middle;">Пользователь с выбранным ID</h1>
+<br>
+<table align="center" cellpadding="10" cellspacing="0" border="2" width="400">
+    <tr>
+        <th>ID</th>
+        <th>ИМЯ</th>
+        <th>ФАМИЛИЯ</th>
+        <th>ВОЗРАСТ</th>
+        <th colspan="3">ОПЕРАЦИИ</th>
+
+    </tr>
+    <td th:utext="${user.getId()}"></td>
+    <td th:utext="${user.getUsername()}"></td>
+    <td th:utext="${user.getAge()}"></td>
+    <td>
+
+
+        <form th:method="DELETE" th:action="@{admin/delete/{id}(id=${user.getId()})}">
+            <input type="submit" value="Удалить"/>
+        </form>
+    </td>
+    <td>
+        <form th:action="@{admin/edit/{id}(id=${user.getId()})}">
+            <input type="submit" value="Редактировать"/>
+        </form>
+    </td>
+</table>
+</body>
+</html>

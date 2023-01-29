@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <style>
+
+        table {
+            background: #FFF8DC;
+        }
+
+        th {
+            background: #FFF5EE;
+        }
+    </style>
+    <title> id пользователя </title>
+</head>
+<body style="background:#F5F5DC">
+<br>
+<br>
+<h1 style="text-align: center; vertical-align: middle;">Ваша страница</h1>
+<br>
+<table align="center" cellpadding="10" cellspacing="0" border="2" width="400">
+    <tr>
+        <th>ID</th>
+        <th>ИМЯ</th>
+        <th>ВОЗРАСТ</th>
+    </tr>
+    <td th:utext="${user.getId()}"></td>
+    <td th:utext="${user.getUsername()}"></td>
+    <td th:utext="${user.getAge()}"></td>
+
+</table>
+<br>
+<br>
+<center><a href="/logout">Выйти</a></center>
+</body>
+</html>
