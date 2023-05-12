@@ -26,11 +26,18 @@
         <th>РОЛЬ</th>
         <th colspan="3">ОПЕРАЦИИ</th>
     </tr>
+
+    <tr th:each="role:${role}">
+        <td th:utext="${role.getRoleId()}"></td>
+
+    </tr>
     <tr th:each="user:${user}">
         <td th:utext="${user.getId()}"></td>
         <td th:utext="${user.getUsername()}"></td>
         <td th:utext="${user.getAge()}"></td>
         <td th:utext="${user.getPassword()}"></td>
+        <td> <a th:each="role: ${user.getRoles()}"th:text="${role.getRole()}"></a>
+    </td>
 
         <td>
             <form th:action="@{admin/delete/{id}(id=${user.id})}" th:method="DELETE">

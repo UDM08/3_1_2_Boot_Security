@@ -5,11 +5,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "users")
-
 public class User implements UserDetails {
 
     @Id
@@ -26,14 +27,23 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name ="role",
-            joinColumns = @JoinColumn(name= "user_id"),
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "role_users",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private List<Role> roles;
 
 
-    public User(Long id, String username, Long age, String password, Collection<Role> roles) {
+    public User(Long id, String username, Long age, String password) {
+        this.id = id;
+        this.username = username;
+        this.age = age;
+        this.password = password;
+
+    }
+
+    public User(Long id, String username, Long age, String password, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.age = age;
@@ -91,6 +101,11 @@ public class User implements UserDetails {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
@@ -99,18 +114,14 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList());
-    }
 
     @Override
     public String toString() {
@@ -119,7 +130,7 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", age=" + age +
                 ", password='" + password + '\'' +
-                ", roles=" + roles +
                 '}';
     }
+
 }

@@ -1,23 +1,30 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+import java.util.List;
 
 
 @Controller
 @RequestMapping("/admin")
-
 public class AdminController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
-    public AdminController(UserService userService) {
+
+    @Autowired
+    public AdminController(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
-    }
+        this.roleService = roleService;
 
+    }
 
     @GetMapping
     public String AllUsers(Model model) {
@@ -27,12 +34,14 @@ public class AdminController {
 
     @GetMapping("/new")
     public String newUser(Model model) {
-        model.addAttribute("user", new User());
+        User user = new User();
+        model.addAttribute("user", user);
         return "new_user";
     }
 
     @PostMapping
-    public String addUser(@ModelAttribute("user") User user) {
+    public String saveUser(@ModelAttribute("user") User user) {
+        user.setRoles(List.of(roleService.findRoleById(2L)));
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -44,21 +53,26 @@ public class AdminController {
 
     }
 
-    @PatchMapping("edit/update/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
-        userService.updateUser(id, user);
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "user_edit";
-    }
-
     @GetMapping("/{id}")
     public String getById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         return "user_id";
     }
+
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable("id") Long id) {
+        User user = (User) userService.getUserById(id);
+        model.addAttribute("user", user);
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("allRoles", roles);
+        return "user_edit";
+    }
+
+    @PostMapping("edit/update/{id}")
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+        userService.updateUser(id, user);
+
+        return "redirect:/admin";
+    }
+
 }

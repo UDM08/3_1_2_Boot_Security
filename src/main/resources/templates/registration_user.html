@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>обновить</title>
+    <title>Регистрация</title>
     <style>
         form.border {
             border: 2px solid #DEB887;
             width: 320px;
-            height: 165px;
+            height: 135px;
             padding: 30px;
             margin: 0 auto;
             background: #FFF8DC;
@@ -17,10 +17,10 @@
 <body style="background:#F5F5DC">
 <br>
 <br>
-<h1 style="text-align: center; vertical-align: middle;">Обновить данные пользователя</h1>
+<h1 style="text-align: center; vertical-align: middle;">Регистрация пользователя</h1>
 <br/>
 <form style="text-align: center; vertical-align: middle;" class="border"
-      th:method="POST" th:action="@{update/{id}(id=${user.getId()})}" th:object="${user}">
+      th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
     <label for="username">Введите имя:</label>
     <input type="text" th:field="*{username}" id="username"/>
     <br/>
@@ -33,17 +33,7 @@
     <input type="text" th:field="*{age}" id="age"/>
     <br/>
     <br/>
-    <label>Роли:
-        <input type="checkbox" name="roles"
-               th:each="role : ${allRoles}"
-               th:text="${role.role}"
-               th:value="${role.roleId}"
-               th:field="*{roles}"
-        />
-    </label>
-    <br/>
-    <br/>
-    <input type="submit" value="Обновить"/>
+    <input type="submit" value="Зарегистрироваться"/>
 </form>
 </body>
 </html>
