@@ -15,20 +15,16 @@ import java.util.List;
 public class RegistrationService {
 
     private final UserDao userDao;
-    private final RoleDao roleDao;
-    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public RegistrationService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public RegistrationService(UserDao userDao) {
         this.userDao = userDao;
-        this.roleDao = roleDao;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     @Transactional
     public void register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(List.of(roleDao.findRoleById(2L)));
         userDao.saveUser(user);
     }
 }
