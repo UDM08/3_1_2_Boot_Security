@@ -14,24 +14,18 @@ public class UserDaoImpl implements UserDao {
 
     private final EntityManager entityManager;
 
-    private final RoleDao roleDao;
-
-    public UserDaoImpl(EntityManager entityManager, RoleDao roleDao) {
+    public UserDaoImpl(EntityManager entityManager) {
 
         this.entityManager = entityManager;
-        this.roleDao = roleDao;
     }
 
     @Override
     public void saveUser(User user) {
-        user.setRoles(List.of(roleDao.findRoleById(2L)));
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         entityManager.persist(user);
     }
 
     @Override
     public void updateUser(Long id, User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         entityManager.merge(user);
     }
 
